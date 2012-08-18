@@ -16,12 +16,20 @@ $(function() {
 </script>
 
 <body>
-<span class="overette-target" data-o-src="#popover" data-o-type="popover" style="margin-left: 40%;">Popover</span>
-<span class="overette-target" data-o-src="#popover" data-o-type="popover" style="margin-left: 90%;">Popover</span>
-<span class="overette-target" data-o-src="#popover" data-o-type="popover">Popover</span>
+<div class="popovers">
+	<span class="overette-target" data-o-src="#popover" data-o-type="popover" style="margin-left: 40%;">Popover</span>
+	<span class="overette-target" data-o-src="#popover" data-o-type="popover" style="margin-left: 90%;">Popover</span>
+	<span class="overette-target" data-o-src="#popover" data-o-type="popover">Popover</span>
+</div>
 
 <div class="dialogs" style="margin-top: 50px">
-<span class="overette-target" data-o-src="#popover" data-o-type="dialog">Dialog</span>
+	<span class="overette-target" data-o-src="#popover" data-o-type="dialog">Dialog</span>
+</div>
+
+<div class="dropdowns" style="margin-top: 50px">
+	<span class="overette-target" data-o-src="#dropdown" data-o-type="dropdown" style="margin-left: 40%;">dropdown</span>
+	<span class="overette-target" data-o-src="#dropdown" data-o-type="dropdown" style="margin-left: 90%;">dropdown</span>
+	<span class="overette-target" data-o-src="#dropdown" data-o-type="dropdown">dropdown</span>
 </div>
 
 
@@ -30,7 +38,7 @@ $(function() {
 		<div class="overette-header">
 			Header
 			<button class="affirm">Save</button>
-			<button class="deny">Cancel</button>
+			<button class="deny" data-o-action="close">Cancel</button>
 		</div>
 		<div class="overette-body">
 			Body
@@ -38,6 +46,14 @@ $(function() {
 		<div class="overette-footer">
 			Footer
 		</div>
+	</div>
+
+	<div id="dropdown">
+		<ul class="selectable">
+			<li>Option</li>
+			<li>Option</li>
+			<li>Option</li>
+		</ul>
 	</div>
 </div>
 

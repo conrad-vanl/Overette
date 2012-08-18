@@ -4,8 +4,9 @@ $.fn.overette = (options) ->
 		Overette.initializeTrigger $this, options
 
 Overette = 
-	dataSrcAttr:  'data-o-src'
-	dataTypeAttr: 'data-o-type'
+	dataSrcAttr:	'data-o-src'
+	dataTypeAttr:	'data-o-type'
+	dataActionAttr:	'data-o-action'
 
 	defaults:
 		popover:
@@ -42,6 +43,13 @@ Overette =
 		else
 			callback new Error "Unsupported Source"
 
+	action: (action, $o) ->
+		switch action
+			when "selection"
+				console.log "selection!"
+			when "close"
+				Overette.close $o
+
 # conditionals
 	isLoaded: ($o) ->
 		return $o && $o.hasClass ("overette-loaded")
@@ -51,10 +59,10 @@ Overette =
 		"overette-ready-" + Math.random().toString(36).substring(7)
 
 	show: ($o) ->
-		$o.fadeIn(150)
+		$o.fadeIn(100)
 
 	hide: ($o) ->
-		$o.fadeOut(150)
+		$o.fadeOut(100)
 
 	assignId: ($o, trigger) ->
 		$o.attr("id", Overette.generateUniqueId(trigger.attr(Overette.dataSrcAttr)))
@@ -72,6 +80,14 @@ Overette =
 
 	triggerClose: ($o) ->
 		$o.trigger "overette:close"
+
+	observeActions: ($o, options) ->
+		observe = ->
+			$o.find('*['+Overette.dataActionAttr+']').on 'click', ->
+				Overette.action $(this).attr(Overette.dataActionAttr), $o
+
+		Overette.onUpdate $o, observe
+		observe()
 
 # types
 	popover: 
@@ -95,6 +111,7 @@ Overette =
 		setup: ($o, trigger, options) ->
 			Overette.repositionAroundTriggerWhenWindowResized.call $o, trigger, options
 			Overette.closeWhenOverlayClicked.call $o, options
+			Overette.observeActions $o, options
 			
 			Overette.onUpdate $o, =>
 				Overette.repositionAroundTrigger.call $o, trigger, options
@@ -127,6 +144,7 @@ Overette =
 
 		setup: ($o, trigger, options) ->
 			Overette.centerWhenWindowResized.call $o, trigger, options
+			Overette.observeActions $o, options
 
 			Overette.onUpdate $o, =>
 				Overette.centerInWindow.call $o, trigger, options
@@ -140,8 +158,38 @@ Overette =
 		container: $("<div class=\"overette-container overette-dialog loading\"><div class=\"overette-overlay\"> </div><div class=\"overette-content\"> </div></div>")
 
 	dropdown:
-		replace: ($o, contents, options = {}) ->
-			console.log "opening dropdown"
+		init: (trigger, src, options = {}) ->
+			# returns overette object ($o)
+			$o = $(src)
+			if Overette.isLoaded $o
+				Overette.show($o)
+			else
+				$o = Overette.dropdown.container
+				Overette.dropdown.setup($o, trigger, $.extend(Overette.defaults.popover, options))
+				$('body').append($o)
+				Overette.show($o)
+			return $o
+
+		replace: (contents) ->
+			this.removeClass "loading"
+			this.find(".overette-content").html(contents)
+			Overette.triggerUpdate this
+
+		setup: ($o, trigger, options) ->
+			Overette.repositionAroundTriggerWhenWindowResized.call $o, trigger, options
+			Overette.closeWhenOverlayClicked.call $o, options
+			Overette.observeActions $o, options
+			
+			Overette.onUpdate $o, =>
+				Overette.repositionAroundTrigger.call $o, trigger, options
+				$o.addClass("overette-loaded").removeClass("loading")
+
+			Overette.onClose $o, =>
+				Overette.hide($o)
+
+			Overette.assignId $o, trigger
+
+		container: $("<div class=\"overette-container overette-dropdown loading\"><div class=\"overette-overlay\"> </div><div class=\"overette-arrow\"> </div><div class=\"overette-content\"> </div></div>")
 
 # Methods with "this" context set to $o
 	closeWhenOverlayClicked: (options) ->
@@ -174,8 +222,6 @@ Overette =
 		top = 0 if top < 0
 
 		$content.css('left',left).css('top',top)
-
-		console.log $content
 
 	repositionAroundTrigger: (trigger, options) ->
 		# TODO: Allow for other options besides center

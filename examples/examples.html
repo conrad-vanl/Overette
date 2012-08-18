@@ -17,13 +17,20 @@ $(function() {
 
 <body>
 <span class="overette-target" data-o-src="#popover" data-o-type="popover" style="margin-left: 40%;">Popover</span>
+<span class="overette-target" data-o-src="#popover" data-o-type="popover" style="margin-left: 90%;">Popover</span>
+<span class="overette-target" data-o-src="#popover" data-o-type="popover">Popover</span>
 
+<div class="dialogs" style="margin-top: 50px">
+<span class="overette-target" data-o-src="#popover" data-o-type="dialog">Dialog</span>
+</div>
 
 
 <div style="display:none">
 	<div id="popover">
 		<div class="overette-header">
 			Header
+			<button class="affirm">Save</button>
+			<button class="deny">Cancel</button>
 		</div>
 		<div class="overette-body">
 			Body

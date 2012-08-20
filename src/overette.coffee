@@ -212,12 +212,12 @@ Overette =
 		$window = $(window)
 
 		content_width = $content.outerWidth()
-		window_width = $window.width()
+		window_width = $window.outerWidth()
 		left = window_width/2 - content_width/2
 		left = 0 if left < 0
 
 		content_height = $content.outerHeight()
-		window_height = $window.height()
+		window_height = window.innerHeight
 		top = window_height/2 - content_height/2
 		top = 0 if top < 0
 
